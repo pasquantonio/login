@@ -83,22 +83,21 @@ def format_user(user):
                                                       user[2])
 
 
-def check_credentials(u, p):
+def check_credentials(username, password):
     """Check password entered against database hash"""
     db = connect_db()
     try:
         cursor = \
             db.execute(
                 'select username, password from users where username = (?)',
-                (u,)
+                (username,)
             )
-        user = cursor.fetchone()
-        if bcrypt.checkpw(p, user[1]):
+        if bcrypt.checkpw(password, cursor.fetchone()[1]):
             return True
         return False
     except Exception as e:
         print('Incorrect credentials or user does not exist')
-        return
+        return False
 
 
 def login():
